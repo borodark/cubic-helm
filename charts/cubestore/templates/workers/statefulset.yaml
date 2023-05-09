@@ -38,6 +38,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
+          fsGroup: 999
+
         - name: cubestore
           {{- if .Values.image.tag }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

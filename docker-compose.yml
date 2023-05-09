@@ -1,0 +1,98 @@
+version: "2.2"
+x-common_variables: &common_variables
+  # ++   env_file: environment-of-cubist
+  CUBEJS_API_SECRET: SECRET
+  CUBEJS_DEV_MODE: true
+  CUBEJS_EXTERNAL_DEFAULT: true
+
+services:
+  cube:
+    depends_on:
+      - cubestore_router
+    image: cube
+    #user: nobody
+    stdin_open: true
+    tty: true
+    ports:
+      - 4000:4000
+      - 3000:3000
+      - 3306:13306
+      - 5432:15432
+    env_file: environment-of-cubist
+    environment:
+      - CUBEJS_CUBESTORE_HOST=cubestore_router
+      - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
+      #<<: *common_variables
+    volumes:
+      - ./my_cubes:/cube/conf
+      - ~/.aws/aws_config:/root/.aws/config
+      - ~/.aws/aws_sts_credentials/credentials:/root/.aws/credentials
+
+  cubestore_router:
+    restart: always
+    image: cube-store
+    #user: nobody
+    env_file: environment-of-cubist
+    environment:
+      - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
+      - CUBESTORE_SERVER_NAME=cubestore_router:9999
+      - CUBESTORE_META_PORT=9999
+      - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_DATA_DIR=/cube/local_data
+    volumes:
+      - cubestore_data:/cube/remote_data
+
+  cubestore_worker_1:
+    restart: always
+    image: cube-store
+    #user: nobody
+    env_file: environment-of-cubist
+    environment:
+      - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
+      - CUBESTORE_SERVER_NAME=cubestore_worker_1:9001
+      - CUBESTORE_WORKER_PORT=9001
+      - CUBESTORE_META_ADDR=cubestore_router:9999
+      - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_DATA_DIR=/cube/local_data
+    volumes:
+      - cubestore_data:/cube/remote_data
+    depends_on:
+      - cubestore_router
+
+  cubestore_worker_2:
+    restart: always
+    image: cube-store
+    env_file: environment-of-cubist
+    environment:
+      - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
+      - CUBESTORE_SERVER_NAME=cubestore_worker_2:9001
+      - CUBESTORE_WORKER_PORT=9001
+      - CUBESTORE_META_ADDR=cubestore_router:9999
+      - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_DATA_DIR=/cube/local_data
+    volumes:
+      - cubestore_data:/cube/remote_data
+    depends_on:
+      - cubestore_router
+
+  clickhouse:
+    image: yandex/clickhouse-server
+    hostname: clickhouse
+    container_name: clickhouse_II
+    volumes:
+      #- ./cube_users.xml:/etc/clickhouse-server/users.d/cube_users.xml
+      - ./grants_to_default_user.xml:/etc/clickhouse-server/users.d/grants_to_default_user.xml
+      - clickhouse-data:/var/lib/clickhouse
+      - ./:/tmp/data/
+    ports:
+      - 8123:8123
+    ulimits:
+      nofile: 262144
+
+volumes:
+  clickhouse-data:
+  cubestore_data:
+  cube_conf:
