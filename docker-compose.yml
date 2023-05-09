@@ -1,16 +1,13 @@
 version: "2.2"
 x-common_variables: &common_variables
   # ++   env_file: environment-of-cubist
-  CUBEJS_API_SECRET: SECRET
-  CUBEJS_DEV_MODE: true
-  CUBEJS_EXTERNAL_DEFAULT: true
 
 services:
   cube:
     depends_on:
       - cubestore_router
     image: cube
-    #user: nobody
+    user: cube
     stdin_open: true
     tty: true
     ports:
@@ -20,6 +17,9 @@ services:
       - 5432:15432
     env_file: environment-of-cubist
     environment:
+      - CUBEJS_API_SECRET=SECRET
+      - CUBEJS_DEV_MODE=true
+      - CUBEJS_EXTERNAL_DEFAULT=true
       - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
       #<<: *common_variables
@@ -31,22 +31,23 @@ services:
   cubestore_router:
     restart: always
     image: cube-store
-    #user: nobody
+    user: cube
     env_file: environment-of-cubist
     environment:
       - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
       - CUBESTORE_SERVER_NAME=cubestore_router:9999
       - CUBESTORE_META_PORT=9999
       - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
-      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data_volume
       - CUBESTORE_DATA_DIR=/cube/local_data
     volumes:
-      - cubestore_data:/cube/remote_data
+      - cubestore_data:/cube/remote_data_volume
 
   cubestore_worker_1:
     restart: always
     image: cube-store
     #user: nobody
+    user: cube
     env_file: environment-of-cubist
     environment:
       - CUBEJS_CACHE_AND_QUEUE_DRIVER=cubestore
@@ -54,15 +55,17 @@ services:
       - CUBESTORE_WORKER_PORT=9001
       - CUBESTORE_META_ADDR=cubestore_router:9999
       - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
-      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data_volume
       - CUBESTORE_DATA_DIR=/cube/local_data
     volumes:
-      - cubestore_data:/cube/remote_data
+      - cubestore_data:/cube/remote_data_volume
+      #- cubestore_data:/cube/remote_data
     depends_on:
       - cubestore_router
 
   cubestore_worker_2:
     restart: always
+    user: cube
     image: cube-store
     env_file: environment-of-cubist
     environment:
@@ -71,10 +74,10 @@ services:
       - CUBESTORE_WORKER_PORT=9001
       - CUBESTORE_META_ADDR=cubestore_router:9999
       - CUBESTORE_WORKERS=cubestore_worker_1:9001,cubestore_worker_2:9001
-      - CUBESTORE_REMOTE_DIR=/cube/remote_data
+      - CUBESTORE_REMOTE_DIR=/cube/remote_data_volume
       - CUBESTORE_DATA_DIR=/cube/local_data
     volumes:
-      - cubestore_data:/cube/remote_data
+      - cubestore_data:/cube/remote_data_volume
     depends_on:
       - cubestore_router
 
