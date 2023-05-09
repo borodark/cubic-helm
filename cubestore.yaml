@@ -1,0 +1,186 @@
+global:
+  appId: 1
+  appName: cubestore
+  environment: test
+  developmentTeamEmail: RocketTechDASAVitals
+
+image:
+  ## Docker image repository
+  ##
+  repository: localhost
+  ## Docker image tag.
+  ## Defaults to Chart AppVersion
+  ##
+  tag: cubestore
+
+securityContext:
+  fsGroup: 1001
+  runAsUser: 1001
+
+config:
+  ## The logging level for Cube Store.
+  ##
+  logLevel: debug
+
+  ## If true, prevents uploading serialized pre-aggregations to cloud storage
+  ##
+  noUpload: true
+
+  ## The number of parallel tasks that process non-interactive jobs like data insertion, compaction etc. Defaults to 4
+  ##
+  jobRunners: 16
+
+  ## If true, then send telemetry to Cube
+  ##
+  telemetry: false
+
+  ## The timeout for SQL queries in seconds. Defaults to 120
+  ##
+  queryTimeout: 200
+
+  ## The number of Cube Store sub-processes that handle SELECT queries. Defaults to 4
+  ##
+  selectWorkers: 8
+
+  ## The maximum number of rows to keep in a single chunk of data right after insertion. Defaults to 262144
+  ##
+  walSplitThreshold:
+
+## Used to define the shared volume to store metadata and datasets
+## Prefer use cloudStorage if your are running on "gcp" or "aws"
+## If a cloudStorage configuration is used, no remoteDir will be created
+##
+remoteDir:
+  persistence:
+    ## Resource Policy
+    ## Setting it to "keep" to avoid removing PVCs during a helm delete operation
+    ##
+    resourcePolicy: keep
+
+    ## Persistent Volume size
+    ##
+    size: 4Gi
+
+    ## Additional custom annotations for the PVC
+    ##
+    annotations: {}
+
+    ## Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteMany
+
+router:
+  ## The port for Cube Store to listen to HTTP connections on
+  ##
+  httpPort: 3030
+
+  ## The port for the router node to listen for connections on
+  ##
+  metaPort: 9999
+
+  ## The port for Cube Store to listen to connections on, for example: 3306
+  ##
+  mysqlPort: 3306
+
+  ## The port for Cube Store to expose status probes
+  ##
+  statusPort: 3031
+
+  persistence:
+    ## Enable persistence for local data using Persistent Volume Claims
+    ##
+    enabled: true
+
+    ## Persistent Volume size
+    ##
+    size: 4Gi
+
+    ## Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## Additional custom annotations for the PVC
+    ##
+    annotations: {}
+
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+workers:
+  ## Number of workers to deploy
+  ##
+  workersCount: 2
+
+  ## The port for Cube Store workers to listen to connections on
+  ##
+  port: 9001
+
+  persistence:
+    ## Enable persistence for local data using Persistent Volume Claims
+    ##
+    enabled: true
+
+    ## Persistent Volume size
+    ##
+    size: 4Gi
+
+    ## Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+redis:
+  ## The host URL for a Redis server
+  ##
+  url: redis-master.svc.cluster.local
+
+## Datasource configuration
+##
+datasources:
+  default:
+    type: clickhouse
+    ## The host URL for a database
+    ##
+    #host:
+
+    ## The port for the database connection
+    ##
+    #port:
+    ## The schema within the database to connect to
+    ##
+    schema: myschema
+
+    ## The name of the database to connect to
+    ##
+    name: mydata
+
+    ## The username used to connect to the database
+    ##
+    user: default
+
+    ## The password used to connect to the database
+    ##
+    #pass:
+    # passFromSecret:
+    #   name:
+    #   key:
+

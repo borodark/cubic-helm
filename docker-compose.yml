@@ -89,7 +89,6 @@ services:
       #- ./cube_users.xml:/etc/clickhouse-server/users.d/cube_users.xml
       - ./grants_to_default_user.xml:/etc/clickhouse-server/users.d/grants_to_default_user.xml
       - clickhouse-data:/var/lib/clickhouse
-      - ./:/tmp/data/
     ports:
       - 8123:8123
     ulimits:
