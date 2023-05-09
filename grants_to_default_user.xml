@@ -1,0 +1,10 @@
+<clickhouse>
+    <!-- Users and ACL. -->
+    <users>
+        <!-- If user name was not specified, 'default
+             ' user is used. -->
+       <default>
+            <access_management>1</access_management>
+        </default>
+    </users>
+</clickhouse>
