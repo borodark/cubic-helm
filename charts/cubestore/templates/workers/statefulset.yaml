@@ -13,6 +13,10 @@ metadata:
     {{- toYaml .Values.commonAnnotations | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.securityContext.enabled }}
+  securityContext:
+    fsGroup: {{ .Values.securityContext.fsGroup }}
+  {{- end }}
   replicas: {{ .Values.workers.workersCount }}
   serviceName: {{ printf "%s-headless" (include "cubestore.fullname" .) }}
   selector:
@@ -26,7 +30,7 @@ spec:
         {{- include "cubestore.selectorLabels" . | nindent 8 }}
         {{- if .Values.commonLabels }}
         {{- toYaml .Values.commonLabels | nindent 8 }}
-        {{- end }}        
+        {{- end }}
       {{- if .Values.commonAnnotations }}
       annotations:
       {{- toYaml .Values.commonAnnotations | nindent 8 }}
@@ -38,13 +42,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        securityContext:
-          runAsUser: 999
-          runAsGroup: 999
-          fsGroup: 999
-
         - name: cubestore
           {{- if .Values.image.tag }}
+          {{- if .Values.securityContext.enabled }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- else }}
           image: "{{ .Values.image.repository }}:v{{ .Chart.AppVersion }}"
@@ -76,9 +79,11 @@ spec:
             - name: CUBESTORE_META_ADDR
               value: {{ printf "%s-router:%d" (include "cubestore.fullname" .) (.Values.router.metaPort | int) }}
             - name: CUBESTORE_DATA_DIR
+              # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               value: /cube/.cubestore/data
             {{- if and (not .Values.cloudStorage.gcp.bucket) (not .Values.cloudStorage.aws.bucket) (not .Values.cloudStorage.minio.bucket) }}
             - name: CUBESTORE_REMOTE_DIR
+              # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               value: /cube/data
             {{- end }}
             {{- if .Values.workers.extraEnvVars }}
@@ -141,6 +146,10 @@ spec:
         annotations: {{- toYaml .Values.workers.persistence.annotations | nindent 10 }}
         {{- end }}
       spec:
+        {{- if .Values.securityContext.enabled }}
+        securityContext:
+          fsGroup: {{ .Values.securityContext.fsGroup }}
+        {{- end }}
         accessModes:
         {{- range .Values.workers.persistence.accessModes }}
           - {{ . | quote }}

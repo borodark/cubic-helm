@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ printf "%s-remote-storage" (include "cubestore.fullname" .) }}
-  labels: 
+  labels:
     app.kubernetes.io/component: remote-storage
     {{- include "cubestore.selectorLabels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
@@ -25,7 +25,7 @@ spec:
   accessModes:
   {{- range .Values.remoteDir.persistence.accessModes }}
     - {{ . | quote }}
-  {{- end }}  
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.remoteDir.persistence.size }}

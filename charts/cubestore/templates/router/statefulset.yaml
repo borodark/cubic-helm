@@ -12,6 +12,10 @@ metadata:
     {{- toYaml .Values.commonAnnotations | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.securityContext.enabled }}
+  securityContext:
+    fsGroup: {{ .Values.securityContext.fsGroup }}
+  {{- end }}
   serviceName: {{ printf "%s-router" (include "cubestore.fullname" .) }}
   selector:
     matchLabels:
@@ -20,14 +24,15 @@ spec:
   template:
     metadata:
       labels:
+        io.io/tags: test
         app.kubernetes.io/component: router
         {{- include "cubestore.selectorLabels" . | nindent 8 }}
         {{- if .Values.commonLabels }}
         {{- toYaml .Values.commonLabels | nindent 8 }}
-        {{- end }}        
+        {{- end }}
       {{- if .Values.commonAnnotations }}
       annotations:
-      {{- toYaml .Values.commonAnnotations | nindent 8 }}
+        {{- toYaml .Values.commonAnnotations | nindent 8 }}
       {{- end }}
     spec:
       serviceAccountName: {{ template "cubestore.router.serviceAccountName" . }}
@@ -36,10 +41,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        securityContext:
-          runAsUser: 999
-          runAsGroup: 999
-          fsGroup: 999
         - name: cubestore
           {{- if .Values.image.tag }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

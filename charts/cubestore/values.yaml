@@ -1,3 +1,10 @@
+## Pod Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+## to use non root containers have a container image with a user 1001 and 
+securityContext:
+  enabled: false
+  #fsGroup:
+  #runAsUser:
 ## Override the name
 ##
 nameOverride: ""
