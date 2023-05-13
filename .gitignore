@@ -1,7 +1,5 @@
 *.tgz
 /.idea/*
 .vscode
-.DS_Store*.~undo-tree~
-/*.~undo-tree~
 build-push-our-cube-images
-build-push-our-cube-images
+**.~undo-tree~

@@ -13,10 +13,6 @@ metadata:
     {{- toYaml .Values.commonAnnotations | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.securityContext.enabled }}
-  securityContext:
-    fsGroup: {{ .Values.securityContext.fsGroup }}
-  {{- end }}
   replicas: {{ .Values.workers.workersCount }}
   serviceName: {{ printf "%s-headless" (include "cubestore.fullname" .) }}
   selector:
@@ -41,13 +37,14 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
       containers:
         - name: cubestore
           {{- if .Values.image.tag }}
-          {{- if .Values.securityContext.enabled }}
-          securityContext:
-            runAsUser: {{ .Values.securityContext.runAsUser }}
-          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- else }}
           image: "{{ .Values.image.repository }}:v{{ .Chart.AppVersion }}"
@@ -146,10 +143,6 @@ spec:
         annotations: {{- toYaml .Values.workers.persistence.annotations | nindent 10 }}
         {{- end }}
       spec:
-        {{- if .Values.securityContext.enabled }}
-        securityContext:
-          fsGroup: {{ .Values.securityContext.fsGroup }}
-        {{- end }}
         accessModes:
         {{- range .Values.workers.persistence.accessModes }}
           - {{ . | quote }}

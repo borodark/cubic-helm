@@ -1,39 +1,29 @@
 ## Override the name
 ##
-nameOverride: "cubexex"
+#nameOverride: "cubexex"
 
 securityContext:
-  enabled: false
+  enabled: true
   fsGroup: 1001
   runAsUser: 1001
 
-#commonAnnotations:
-#  io.io/tags: '{"env": "test", "team": "vitals_detected" }'
+commonAnnotations:
+  io.io/tags: '{"env": "test", "team": "lupi" }'
 
 commonLabels:
   io: "debug"
 
-## Override the name
-##
-nameOverride: "storeI"
-
 image:
   ## Docker image repository
   ##
-  repository: "${repo}"
+  repository: "cube-store"
   ## Docker image tag.
   ## Defaults to Chart AppVersion
   ##
-  tag: "cubestore"
+  tag: "latest"
   ## Specify a imagePullPolicy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  #pullPolicy: Always
-  ## Specify a imagePullSecrets
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  ##
-  pullSecrets:
-    - name: myecr
 
 config:
   ## The logging level for Cube Store.
@@ -88,7 +78,7 @@ router:
   ##
   serviceAccount:
     create: true
-    name: "vitals"
+    name: qstore
   ## The port for Cube Store to listen to HTTP connections on
   ##
   httpPort: 3030
@@ -149,11 +139,7 @@ workers:
   ## Service account for cubestore workers to use
   ##
   serviceAccount:
-    create: true
-    name: vitals
-    automountServiceAccountToken: true
-    annotations: {}
-
+    name: qstore
   ## Number of workers to deploy
   ##
   workersCount: 1

@@ -12,10 +12,6 @@ metadata:
     {{- toYaml .Values.commonAnnotations | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.securityContext.enabled }}
-  securityContext:
-    fsGroup: {{ .Values.securityContext.fsGroup }}
-  {{- end }}
   serviceName: {{ printf "%s-router" (include "cubestore.fullname" .) }}
   selector:
     matchLabels:
@@ -39,6 +35,11 @@ spec:
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+          {{- if .Values.securityContext.enabled }}
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       containers:
         - name: cubestore
