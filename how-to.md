@@ -53,4 +53,4 @@ kubectl port-forward deployment/myapp 8080:8080
 
 ```
 
-[deploy in minicube](./take-off.png)
+![deploy in minicube](./take-off.png)
