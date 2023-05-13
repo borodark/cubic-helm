@@ -2,10 +2,11 @@
 
 ## test charts
 
-`helm --debug install --generate-name . --dry-run -f cube-store.yaml`
+`helm --debug install qstore . -f cube-store.yaml`
 
 https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 
+https://unofficial-kubernetes.readthedocs.io/en/latest/concepts/policy/security-context/
 
 ```
 io@io-All-Series:~/projects/cubes/cubic-helm/charts/cubestore$ helm --debug install qstore . -f cube-store.yaml > deploy_I.md 
@@ -25,3 +26,31 @@ client.go:406: [debug] Created a new StatefulSet called "qstore-cubestore-router
 client.go:406: [debug] Created a new StatefulSet called "qstore-cubestore-workers" in default
 
 ```
+
+
+https://github.com/mr-pascal/medium-local-docker-image-minikube/tree/master
+
+```
+### Build container
+docker build -t pz/demo .
+
+### Run container
+docker run -it --rm -p 8080:8080 pz/demo
+
+## ---
+
+### Load local Docker image into Minikube
+minikube image load pz/demo
+
+### Build container directly in minikube
+minikube image build -t pz/demo .
+
+### Check Deployment logs
+kubectl logs deployment.apps/myapp
+
+### Port forward port to Deployment
+kubectl port-forward deployment/myapp 8080:8080
+
+```
+
+![deploy in minicube]('take-off.png')

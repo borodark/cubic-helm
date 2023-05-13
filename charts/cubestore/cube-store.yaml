@@ -16,7 +16,7 @@ commonLabels:
 image:
   ## Docker image repository
   ##
-  repository: "cube-store"
+  repository: "cube/store"
   ## Docker image tag.
   ## Defaults to Chart AppVersion
   ##
@@ -50,7 +50,7 @@ remoteDir:
     ## Resource Policy
     ## Setting it to "keep" to avoid removing PVCs during a helm delete operation
     ##
-    resourcePolicy: keep
+    #resourcePolicy: keep
 
     ## Persistent Volume size
     ##
@@ -71,7 +71,7 @@ remoteDir:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: pvc
+    storageClass: standard
 
 router:
   ## Service account for cubestore router to use
@@ -111,7 +111,7 @@ router:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: pvc
+    storageClass: standard
 
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -168,4 +168,4 @@ workers:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: pvc
+    storageClass: standard
