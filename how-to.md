@@ -1,6 +1,22 @@
 # the way of samurai
 
-## test charts
+
+## Results
+
+
+### user id group id is not root
+
+![uid-gid](./uid-gid-confirmed.png)
+
+
+### Deploy in minicube
+
+![deploy in minicube](./take-off.png)
+
+
+
+## Developing  charts
+
 
 `helm --debug install qstore . -f cube-store.yaml`
 
@@ -27,7 +43,6 @@ client.go:406: [debug] Created a new StatefulSet called "qstore-cubestore-worker
 
 ```
 
-
 https://github.com/mr-pascal/medium-local-docker-image-minikube/tree/master
 
 ```
@@ -52,5 +67,3 @@ kubectl logs deployment.apps/myapp
 kubectl port-forward deployment/myapp 8080:8080
 
 ```
-
-![deploy in minicube](./take-off.png)
