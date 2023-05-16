@@ -1,7 +1,3 @@
-## Override the name
-##
-#nameOverride: "cubexex"
-
 securityContext:
   enabled: true
   fsGroup: 1001

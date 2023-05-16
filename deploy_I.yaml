@@ -140,7 +140,6 @@ spec:
               containerPort: 3031
               protocol: TCP
           env:
-            
             - name: CUBESTORE_LOG_LEVEL
               value: "debug"
             - name: CUBESTORE_NO_UPLOAD
@@ -155,7 +154,6 @@ spec:
               value: "9999"
             - name: CUBESTORE_STATUS_PORT
               value: "3031"
-            
             - name: CUBESTORE_WORKERS
               value: "qstore-cubestore-workers-0.qstore-cubestore-headless:9001"
             - name: CUBESTORE_DATA_DIR
@@ -249,7 +247,6 @@ spec:
               containerPort: 9001
               protocol: TCP
           env:
-            
             - name: CUBESTORE_LOG_LEVEL
               value: "debug"
             - name: CUBESTORE_NO_UPLOAD
