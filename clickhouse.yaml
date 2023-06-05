@@ -1,0 +1,30 @@
+global:
+  platform: aws
+  accountNumber: 801554245576
+  awsRegion: us-east-2
+  appId: 208767
+  appName: vitals-ch
+  environment: sandbox
+  developmentTeamEmail: RocketTechDASAVitals
+  storageClass: ebs-gp3
+
+replicaCount: 1
+
+shards: 1
+
+serviceAccount:
+  name: vitalsch
+
+podSecurityContext:
+  enabled: false
+
+auth:
+  username: vitals
+  password: 111111
+
+persistence:
+  storageClass: ebs-gp3
+  size: 10Gi
+
+zookeeper:
+  enabled: false

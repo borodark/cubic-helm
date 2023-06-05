@@ -1,50 +1,41 @@
-global:
-  appId: 1
-  appName: cubestore
-  environment: test
-  developmentTeamEmail: RocketTechDASAVitals
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+
+commonAnnotations:
+  io.io/tags: '{"env": "test", "team": "lupi" }'
+
+commonLabels:
+  io: "debug"
 
 image:
   ## Docker image repository
   ##
-  repository: localhost
+  repository: "cube/store"
   ## Docker image tag.
   ## Defaults to Chart AppVersion
   ##
-  tag: cubestore
-
-securityContext:
-  fsGroup: 1001
-  runAsUser: 1001
+  tag: "latest"
+  ## Specify a imagePullPolicy
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
 
 config:
   ## The logging level for Cube Store.
   ##
-  logLevel: debug
+  logLevel: "debug"
 
   ## If true, prevents uploading serialized pre-aggregations to cloud storage
   ##
   noUpload: true
 
-  ## The number of parallel tasks that process non-interactive jobs like data insertion, compaction etc. Defaults to 4
-  ##
-  jobRunners: 16
-
   ## If true, then send telemetry to Cube
   ##
   telemetry: false
-
-  ## The timeout for SQL queries in seconds. Defaults to 120
-  ##
-  queryTimeout: 200
-
   ## The number of Cube Store sub-processes that handle SELECT queries. Defaults to 4
   ##
   selectWorkers: 8
-
-  ## The maximum number of rows to keep in a single chunk of data right after insertion. Defaults to 262144
-  ##
-  walSplitThreshold:
 
 ## Used to define the shared volume to store metadata and datasets
 ## Prefer use cloudStorage if your are running on "gcp" or "aws"
@@ -59,18 +50,26 @@ remoteDir:
 
     ## Persistent Volume size
     ##
-    size: 4Gi
-
-    ## Additional custom annotations for the PVC
-    ##
-    annotations: {}
+    size: 8Gi
 
     ## Persistent Volume access modes
     ##
     accessModes:
       - ReadWriteMany
 
+    ## @param remoteDir.persistence.storageClass The storage class to use for the remoteDir pvc
+    ## If defined, storageClassName: <storageClass>
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: efs
+
 router:
+  ## Service account for cubestore router to use
+  ##
+  serviceAccount:
+    name: test-vitals-bankers-performance-api
   ## The port for Cube Store to listen to HTTP connections on
   ##
   httpPort: 3030
@@ -78,10 +77,6 @@ router:
   ## The port for the router node to listen for connections on
   ##
   metaPort: 9999
-
-  ## The port for Cube Store to listen to connections on, for example: 3306
-  ##
-  mysqlPort: 3306
 
   ## The port for Cube Store to expose status probes
   ##
@@ -100,9 +95,14 @@ router:
     ##
     accessModes:
       - ReadWriteOnce
-    ## Additional custom annotations for the PVC
+
+    ## @param router.persistence.storageClass The storage class to use for the workers pvc
+    ## If defined, storageClassName: <storageClass>
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
     ##
-    annotations: {}
+    storageClass: gp2
 
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -110,8 +110,8 @@ router:
   livenessProbe:
     enabled: true
     initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 3
+    periodSeconds: 30
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
 
@@ -121,15 +121,19 @@ router:
   readinessProbe:
     enabled: true
     initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 3
+    periodSeconds: 30
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
 
 workers:
+  ## Service account for cubestore workers to use
+  ##
+  serviceAccount:
+    name: test-vitals-bankers-performance-api
   ## Number of workers to deploy
   ##
-  workersCount: 2
+  workersCount: 1
 
   ## The port for Cube Store workers to listen to connections on
   ##
@@ -148,39 +152,11 @@ workers:
     ##
     accessModes:
       - ReadWriteOnce
-redis:
-  ## The host URL for a Redis server
-  ##
-  url: redis-master.svc.cluster.local
 
-## Datasource configuration
-##
-datasources:
-  default:
-    type: clickhouse
-    ## The host URL for a database
+    ## @param workers.persistence.storageClass The storage class to use for the workers pvc
+    ## If defined, storageClassName: <storageClass>
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
     ##
-    #host:
-
-    ## The port for the database connection
-    ##
-    #port:
-    ## The schema within the database to connect to
-    ##
-    schema: myschema
-
-    ## The name of the database to connect to
-    ##
-    name: mydata
-
-    ## The username used to connect to the database
-    ##
-    user: default
-
-    ## The password used to connect to the database
-    ##
-    #pass:
-    # passFromSecret:
-    #   name:
-    #   key:
-
+    storageClass: gp2
