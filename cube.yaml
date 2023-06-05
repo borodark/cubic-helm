@@ -1,0 +1,220 @@
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+
+commonAnnotations:
+  io.io/tags: '{"env": "test", "team": "lupi" }'
+
+commonLabels:
+  io: "debug"
+
+image:
+  ## Docker image repository
+  ##
+  repository: "cube/cube"
+  ## Docker image tag.
+  ## Defaults to Chart AppVersion
+  ##
+  tag: "latest"
+
+config:
+  ## The port for a Cube deployment to listen to API connections on
+  ##
+  apiPort: 4000
+
+  ## The port to listen to MySQL-compatible connections on
+  ##
+  sqlPort: 3306
+
+  ## The port to listen to Postgres-compatible connections on
+  ##
+  pgSqlPort: 5432
+
+  ## The username to access the SQL api
+  ##
+  sqlUser: kube
+
+  ## The password to access the SQL api
+  ##
+  sqlPassword: cube
+  ## If true, enables development mode
+  ##
+  devMode: true
+
+  ## If true, enables debug logging
+  ##
+  debug: true
+
+  ## The logging level for Cube
+  ##
+  logLevel: "info"
+
+  ## If true, then send telemetry to Cube
+  ##
+  telemetry: false
+
+  ## The path where Cube loads schemas from. Defaults to schema
+  ##
+  schemaPath:
+
+  ## An application ID used to uniquely identify the Cube deployment. Can be different for multitenant setups
+  ## Defaults to cubejs
+  ##
+  app: kubeone
+
+  ## A comma-separated list of timezones to schedule refreshes for.
+  ##
+  scheduledRefreshTimezones: UTC,EST
+
+  ## How many pre-aggregations refresh worker will build in parallel. Please note changing this param doesn't change queue concurrency and it should be adjusted accordingly
+  ##
+  scheduledRefreshConcurrency: 5
+
+  ## The schema name to use for storing pre-aggregations.
+  ## Defaults to dev_pre_aggregations/prod_pre_aggregations for development/production mode
+  ##
+  preAggregationsSchema:
+  ## The number of concurrent connections each query queue has to the database
+  ##
+  concurrency: 10
+
+## Datasource configuration
+##
+datasources:
+  ## Default datasource
+  default:
+    ## A database type supported by Cube
+    ## https://artifacthub.io/packages/helm/open-8gears/clickhouse
+    type: clickhouse
+
+    ## The URL for a database
+    ##
+    url: clickhouse.local
+
+    ## The host URL for a database
+    ##
+    host: clickhouse.local
+
+    ## The port for the database connection
+    ##
+    port: 8123
+
+    ## The schema within the database to connect to
+    ##
+    schema: towers
+
+    ## The name of the database to connect to
+    ##
+    name: towers_db
+
+    ## The username used to connect to the database
+    ##
+    user: default
+
+    ## The maximum number of connections to keep active in the database connection pool
+    ##
+    maxPool: 10
+
+    clickhouse:
+      ## Whether the ClickHouse user has read-only access or not
+      ##
+      readonly: false
+
+## Cubestore configuration
+##
+cubestore:
+  ## The hostname of the Cube Store deployment
+  ##
+  host: qstore-cubestore-router:9999
+
+  ## The port of the Cube Store deployment
+  ##
+  port: 3030
+
+api:
+  ## Service account for cube api to use
+  ##
+  serviceAccount:
+    create: false
+    name: qstore
+
+  apiCount: 1
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+worker:
+  ## Set to true to enable a separate refresh worker
+  ##
+  enabled: true
+
+  ## Service account for cube worker to use
+  ##
+  serviceAccount:
+    create: false
+    name: qstore
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+  ## Configure options for liveness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
+## Configure the ingress resource that allows you to access the
+## Cube installation. Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  ## Set to true to enable ingress record generation
+  ##
+  enabled: true
+
+  ## When the ingress is enabled, a host pointing to this will be created
+  ##
+  hostname: kubeofcubes.local
+
+  ## The Path to Cube. You may need to set this to '/*' in order to use this
+  ## with ALB ingress controllers.
+  ##
+  path: /*
+
+
+  ## Enable TLS configuration for the hostname defined at ingress.hostname parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
+  ## You can use the ingress.secrets parameter to create this TLS secret or relay on cert-manager to create it
+  ##
+  tls: false
