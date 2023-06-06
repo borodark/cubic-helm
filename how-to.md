@@ -1,4 +1,54 @@
-# the way of samurai
+
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-whale
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-0xvvxcxcvxccvxc
+```
+
+The `volumeHandle: fs-0fb3348fe1f070053` is refering to a instance of AWS Elastic File System.
+
+### the PVC created from the original chart
+
+```yaml
+---
+# Source: cubestore/templates/pvc.yaml
+apiVersion: v1
+metadata:
+  name: qstore-cubestore-remote-storage
+  labels:
+    app.kubernetes.io/component: remote-storage
+    app.kubernetes.io/name: cubestore
+    app.kubernetes.io/instance: qstore
+    io: debug
+  annotations:
+    helm.sh/resource-policy: keep
+    io.io/tags: '{"env": "test", "team": "lupi" }'
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: 4Gi
+  storageClassName: pvc
+```
+
+
+
+## the way of samurai AKA putting it all together
+
+https://git.rockfin.com/terraform/aws-efs-tft
 
 
 ## Results
@@ -67,3 +117,28 @@ kubectl logs deployment.apps/myapp
 kubectl port-forward deployment/myapp 8080:8080
 
 ```
+
+`clickhouse-client -u vitals --password 111111`
+
+`kubectl cp ~/<your-file-here> factorio/factorio-0:/tmp/<your-file-there>`
+
+ingress.hostname
+vitals-banker-performance-api.datalake-sandbox.foc.zone
+
+
+```
+helm upgrade vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f vitals-clickhouse.yaml 
+helm install vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f vitals-clickhouse.yaml 
+```
+Actual error message from rancher
+
+```
+failed to provision volume with StorageClass "ebs-gp3": rpc error: code = InvalidArgument desc = Volume capabilities MULTI_NODE_MULTI_WRITER not supported. Only AccessModes[ReadWriteOnce] supported.
+```
+
+` helm --debug install vitalsqbstore . -f ../../vitals-cubestore-sandbox.yaml  | tee deploy_I`
+
+Equally useful undeploy:
+
+`delete chart `helm --debug delete vitalsqbstore`
+
