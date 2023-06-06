@@ -122,13 +122,10 @@ kubectl port-forward deployment/myapp 8080:8080
 
 `kubectl cp ~/<your-file-here> factorio/factorio-0:/tmp/<your-file-there>`
 
-ingress.hostname
-vitals-banker-performance-api.datalake-sandbox.foc.zone
-
 
 ```
-helm upgrade vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f vitals-clickhouse.yaml 
-helm install vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f vitals-clickhouse.yaml 
+helm upgrade vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f clickhouse.yaml 
+helm install vitalsch oci://registry-1.docker.io/bitnamicharts/clickhouse -f clickhouse.yaml 
 ```
 Actual error message from rancher
 
@@ -136,7 +133,7 @@ Actual error message from rancher
 failed to provision volume with StorageClass "ebs-gp3": rpc error: code = InvalidArgument desc = Volume capabilities MULTI_NODE_MULTI_WRITER not supported. Only AccessModes[ReadWriteOnce] supported.
 ```
 
-` helm --debug install vitalsqbstore . -f ../../vitals-cubestore-sandbox.yaml  | tee deploy_I`
+` helm --debug install vitalsqbstore . -f ../../cubestore.yaml  | tee deploy_I`
 
 Equally useful undeploy:
 
