@@ -6,10 +6,10 @@ The minimum production deployment of Cube consist of:
 - cubestore: a `router`, a `worker` or a few
 - cube: `an API serving instance` connected to the above mentioned router
 
-    Running a `cubestore` with multiple `worker`s requares a shared file system. It must be available to all instances: https://cube.dev/docs/reference/environment-variables#cubestore-remote-dir `
+Running a `cubestore` with multiple `worker`s requares a shared file system. It must be available to all instances: https://cube.dev/docs/reference/environment-variables#cubestore-remote-dir 
 
 Having a goal of creating a shared volume for all cube store `worker` pods to be used as shared `remote-storage` and given in the following combination of conditions:
-  - We do not have Dynamic Provisioning working now (2023-06-01 as per JasonB ).
+  - We do not have Dynamic Provisioning working in our cluster now.
   - This is POC in sandbox
 
 Decisions were made to:
