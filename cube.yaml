@@ -1,14 +1,3 @@
-global:
-  platform: "aws"
-  accountNumber: "801554245576"
-  awsRegion: "us-east-2"
-  appId: 208767
-  appName: "cube-full-of-vitals"
-  environment: "sandbox"
-  developmentTeamEmail: "RocketTechDASAVitals"
-
-
-
 securityContext:
   enabled: true
   fsGroup: 1001

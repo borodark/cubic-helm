@@ -1,6 +1,4 @@
 global:
-  appName: vitals-ch
-  environment: sandbox
   storageClass: csi-hostpath-sc
 
 replicaCount: 1
@@ -9,13 +7,13 @@ shards: 1
 
 serviceAccount:
   create: true
-  name: vitalsch
+  name: lupi-ch
 
 podSecurityContext:
   enabled: false
 
 auth:
-  username: vitals
+  username: lupi
   password: 111111
 
 persistence:

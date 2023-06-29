@@ -69,7 +69,7 @@ router:
   ## Service account for cubestore router to use
   ##
   serviceAccount:
-    name: test-vitals-bankers-performance-api
+    name: lupi
   ## The port for Cube Store to listen to HTTP connections on
   ##
   httpPort: 3030
@@ -130,7 +130,7 @@ workers:
   ## Service account for cubestore workers to use
   ##
   serviceAccount:
-    name: test-vitals-bankers-performance-api
+    name: lupi
   ## Number of workers to deploy
   ##
   workersCount: 1
