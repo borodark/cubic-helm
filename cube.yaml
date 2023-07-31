@@ -88,29 +88,22 @@ datasources:
     ## https://artifacthub.io/packages/helm/open-8gears/clickhouse
     type: clickhouse
 
-    ## The URL for a database
-    ##
-    url: clickhouse.local
-
     ## The host URL for a database
     ##
-    host: clickhouse.local
+    host: vitalsch-clickhouse
 
     ## The port for the database connection
     ##
     port: 8123
 
-    ## The schema within the database to connect to
-    ##
-    schema: towers
-
     ## The name of the database to connect to
     ##
-    name: towers_db
+    name: default
 
     ## The username used to connect to the database
     ##
-    user: default
+    user: lupi
+    pass: 111111
 
     ## The maximum number of connections to keep active in the database connection pool
     ##
@@ -126,19 +119,13 @@ datasources:
 cubestore:
   ## The hostname of the Cube Store deployment
   ##
-  host: qstore-cubestore-router:9999
+  host: thestore-cubestore-router:9999
 
   ## The port of the Cube Store deployment
   ##
   port: 3030
 
 api:
-  ## Service account for cube api to use
-  ##
-  serviceAccount:
-    create: false
-    name: qstore
-
   apiCount: 1
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -166,12 +153,6 @@ worker:
   ## Set to true to enable a separate refresh worker
   ##
   enabled: true
-
-  ## Service account for cube worker to use
-  ##
-  serviceAccount:
-    create: false
-    name: qstore
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   ##
