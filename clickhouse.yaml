@@ -10,7 +10,7 @@ serviceAccount:
   name: lupi-ch
 
 podSecurityContext:
-  enabled: false
+  enabled: true
 
 auth:
   username: lupi
