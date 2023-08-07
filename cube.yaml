@@ -132,8 +132,8 @@ api:
     initialDelaySeconds: 10
     periodSeconds: 30
     timeoutSeconds: 10
-    successThreshold: 10
-    failureThreshold: 20
+    successThreshold: 1
+    failureThreshold: 2
 
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -143,8 +143,8 @@ api:
     initialDelaySeconds: 10
     periodSeconds: 30
     timeoutSeconds: 10
-    successThreshold: 10
-    failureThreshold: 20
+    successThreshold: 1
+    failureThreshold: 2
 
 worker:
   ## Set to true to enable a separate refresh worker
@@ -158,8 +158,8 @@ worker:
     initialDelaySeconds: 10
     periodSeconds: 30
     timeoutSeconds: 10
-    successThreshold: 10
-    failureThreshold: 20
+    successThreshold: 1
+    failureThreshold: 2
 
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -170,8 +170,8 @@ worker:
     initialDelaySeconds: 10
     periodSeconds: 30
     timeoutSeconds: 10
-    successThreshold: 10
-    failureThreshold: 20
+    successThreshold: 1
+    failureThreshold: 2
 
 ## Configure the ingress resource that allows you to access the
 ## Cube installation. Set up the URL
