@@ -78,16 +78,19 @@ config:
   ## The config volumes
   ## Will be used to both api and worker
   volumes:
-    - name: nfs-pv
+    - name: config-on-nfs
   #   configMap:
   #     name: schema
 
   ## The config volumeMounts
   ## Will be used to both api and worker
   volumeMounts:
-    - name: nfs-pv
+    - name: config-on-nfs
       readOnly: false
       mountPath: /cube/conf/schema
+      size: 150Mi
+      storageClassName: nfs-manual
+      
 
 ## Datasource configuration
 ##
@@ -144,7 +147,7 @@ api:
     enabled: true
     initialDelaySeconds: 10
     periodSeconds: 30
-    timeoutSeconds: 3
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
 
@@ -155,9 +158,9 @@ api:
     enabled: true
     initialDelaySeconds: 10
     periodSeconds: 30
-    timeoutSeconds: 3
-    successThreshold: 1
-    failureThreshold: 3
+    timeoutSeconds: 10
+    successThreshold: 5
+    failureThreshold: 7
 
 worker:
   ## Set to true to enable a separate refresh worker

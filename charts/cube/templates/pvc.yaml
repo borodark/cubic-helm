@@ -8,7 +8,7 @@ metadata:
     {{- include "cube.selectorLabels" . | nindent 4 }}
   annotations:
     # TODO keep or not to keep, that is the `?`
-    helm.sh/resource-policy: keep
+    helm.sh/resource-policy: delete
     {{- if .Values.securityContext.enabled }}
     pv.beta.kubernetes.io/gid: "{{ .Values.securityContext.fsGroup }}"
     {{- end }}
@@ -19,11 +19,11 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  {{- with (first .Values.config.volumes) }}
+  {{- with (first .Values.config.volumeMounts) }}
   volumeName: {{ .name }}
-  {{- end }}
   resources:
     requests:
-      storage: 125M
-  storageClassName: ""
+      storage: {{ .size }}
+  storageClassName: {{ .storageClassName }}
+  {{- end }}
 {{- end }}
