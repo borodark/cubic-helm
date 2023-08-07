@@ -75,26 +75,6 @@ config:
   ##
   concurrency: 10
 
-  ## The config volumes
-  ## Will be used to both api and worker
-  volumes:
-    - name: schema
-  #   configMap:
-  #     name: schema
-
-  ## The config volumeMounts
-  ## Will be used to both api and worker
-  volumeMounts:
-    - name: schema
-      readOnly: false
-      mountPath: /cube/conf/schema
-
-  schemaPersistentVolume:
-    - name: config-on-nfs
-      size: 150Mi
-      storageClassName: nfs-manual
-
-
 
 ## Datasource configuration
 ##
