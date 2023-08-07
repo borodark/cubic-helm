@@ -12,7 +12,7 @@ commonLabels:
 image:
   ## Docker image repository
   ##
-  repository: "cube/store"
+  repository: "cubejs/cubestore"
   ## Docker image tag.
   ## Defaults to Chart AppVersion
   ##
