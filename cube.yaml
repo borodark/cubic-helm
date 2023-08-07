@@ -54,10 +54,6 @@ config:
   ##
   telemetry: false
 
-  ## The path where Cube loads schemas from. Defaults to schema
-  ##
-  schemaPath:
-
   ## An application ID used to uniquely identify the Cube deployment. Can be different for multitenant setups
   ## Defaults to cubejs
   ##
@@ -78,6 +74,20 @@ config:
   ## The number of concurrent connections each query queue has to the database
   ##
   concurrency: 10
+
+  ## The config volumes
+  ## Will be used to both api and worker
+  volumes:
+    - name: nfs-pv
+  #   configMap:
+  #     name: schema
+
+  ## The config volumeMounts
+  ## Will be used to both api and worker
+  volumeMounts:
+    - name: nfs-pv
+      readOnly: false
+      mountPath: /cube/conf/schema
 
 ## Datasource configuration
 ##

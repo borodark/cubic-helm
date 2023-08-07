@@ -1,4 +1,3 @@
-
 {{- if .Values.config.devMode }}
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -8,6 +7,7 @@ metadata:
     app.kubernetes.io/component: schema-storage
     {{- include "cube.selectorLabels" . | nindent 4 }}
   annotations:
+    # TODO keep or not to keep, that is the `?`
     helm.sh/resource-policy: keep
     {{- if .Values.securityContext.enabled }}
     pv.beta.kubernetes.io/gid: "{{ .Values.securityContext.fsGroup }}"
@@ -19,8 +19,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: {{ .Values.config.volumeName }}
-  # TODO hardcoding the volume name for one existing EFS volume manually created
+  {{- with (first .Values.config.volumes) }}
+  volumeName: {{ .name }}
+  {{- end }}
   resources:
     requests:
       storage: 125M

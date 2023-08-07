@@ -145,3 +145,4 @@ AKA putting it all together
 
 ![deploy in minicube](./take-off.png)
 
+minikube kubectl -- apply -f manual-nfs-volume.yaml
