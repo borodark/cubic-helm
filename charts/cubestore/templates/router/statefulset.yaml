@@ -20,7 +20,6 @@ spec:
   template:
     metadata:
       labels:
-        io.io/tags: test
         app.kubernetes.io/component: router
         {{- include "cubestore.selectorLabels" . | nindent 8 }}
         {{- if .Values.commonLabels }}
@@ -28,7 +27,7 @@ spec:
         {{- end }}
       {{- if .Values.commonAnnotations }}
       annotations:
-        {{- toYaml .Values.commonAnnotations | nindent 8 }}
+      {{- toYaml .Values.commonAnnotations | nindent 8 }}
       {{- end }}
     spec:
       serviceAccountName: {{ template "cubestore.router.serviceAccountName" . }}

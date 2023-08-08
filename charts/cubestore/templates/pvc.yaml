@@ -29,15 +29,8 @@ spec:
   {{- range .Values.remoteDir.persistence.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{- if .Values.remoteDir.persistence.volumeName }}
-  volumeName: {{ .Values.remoteDir.persistence.volumeName }}
-  {{- end }}
   resources:
     requests:
       storage: {{ .Values.remoteDir.persistence.size }}
-  {{- if eq .Values.remoteDir.persistence.storageClass "manual" }}
-  storageClassName: ""
-  {{- else }}
   storageClassName: {{ .Values.remoteDir.persistence.storageClass }}
-  {{- end }}
 {{- end }}
