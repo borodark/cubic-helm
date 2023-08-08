@@ -76,11 +76,9 @@ spec:
             - name: CUBESTORE_META_ADDR
               value: {{ printf "%s-router:%d" (include "cubestore.fullname" .) (.Values.router.metaPort | int) }}
             - name: CUBESTORE_DATA_DIR
-              # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               value: /cube/.cubestore/data
             {{- if and (not .Values.cloudStorage.gcp.bucket) (not .Values.cloudStorage.aws.bucket) (not .Values.cloudStorage.minio.bucket) }}
             - name: CUBESTORE_REMOTE_DIR
-              # TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               value: /cube/data
             {{- end }}
             {{- if .Values.workers.extraEnvVars }}
