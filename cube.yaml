@@ -67,14 +67,23 @@ config:
   ##
   scheduledRefreshConcurrency: 5
 
-  ## The schema name to use for storing pre-aggregations.
-  ## Defaults to dev_pre_aggregations/prod_pre_aggregations for development/production mode
-  ##
-  preAggregationsSchema:
   ## The number of concurrent connections each query queue has to the database
   ##
   concurrency: 10
 
+  ## The config volumes
+  ## Will be used to both api and worker
+  volumes:
+    - name: schema
+      #configMap:
+      #  name: schema
+
+  ## The config volumeMounts
+  ## Will be used to both api and worker
+  volumeMounts:
+    - name: schema
+      readOnly: false
+      mountPath: /cube/conf/schema
 
 ## Datasource configuration
 ##
@@ -104,7 +113,7 @@ datasources:
 
     ## The maximum number of connections to keep active in the database connection pool
     ##
-    maxPool: 10
+    maxPool: 5
 
     clickhouse:
       ## Whether the ClickHouse user has read-only access or not
@@ -116,7 +125,7 @@ datasources:
 cubestore:
   ## The hostname of the Cube Store deployment
   ##
-  host: thestore-cubestore-router:9999
+  host: thestore-cubestore-router
 
   ## The port of the Cube Store deployment
   ##
@@ -149,7 +158,7 @@ api:
 worker:
   ## Set to true to enable a separate refresh worker
   ##
-  enabled: true
+  enabled: false
   ## Configure options for liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   ##
