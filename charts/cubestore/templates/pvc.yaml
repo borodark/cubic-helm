@@ -32,10 +32,10 @@ spec:
   resources:
     requests:
       storage: {{ .Values.remoteDir.persistence.size }}
-  {{- if and (eq .Values.remoteDir.persistence.storageClass "manual") .Values.remoteDir.persistence.volumeName }}
-  volumeName: {{ .Values.remoteDir.persistence.volumeName }}
-  storageClassName: ""
-  {{- else }}
+  {{- if .Values.remoteDir.persistence.storageClass }}
   storageClassName: {{ .Values.remoteDir.persistence.storageClass }}
+  {{- end }}
+  {{- if  .Values.remoteDir.persistence.volumeName }}
+  volumeName: {{ .Values.remoteDir.persistence.volumeName }}
   {{- end }}
 {{- end }}

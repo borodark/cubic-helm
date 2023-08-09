@@ -103,6 +103,13 @@ remoteDir:
     ##
     storageClass:
 
+    ## @param remoteDir.persistence.volumeName The name of the NFS or AWS EFS backed volume
+    ## that is already provisioned in the cluster ( persistentvolume/<volumeName>) where this chart is deployed
+    ## and have the same as the above mentioned @param remoteDir.persistence.storageClass.
+    ## Works for for on-prem cluser if having NFS shares is an option.
+    ##
+    volumeName:
+
 cloudStorage:
   gcp:
     ## A Base64 encoded JSON key file for connecting to Google Cloud. Required when using Google Cloud Storage
